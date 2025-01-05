@@ -72,9 +72,9 @@ class MenuMainAdapterRequests(
 
 interface MenuMainAdapterRequestsInterface {
 
-    private companion object {
-        private const val TABLE_NAME = Constants.DYNAMO_DB_MENU_TABLE_NAME
-        private const val USER_ID_INDEX = Constants.MENU_TABLE_USER_ID_MENU_ID_INDEX
+    private companion object: Constants() {
+        private const val TABLE_NAME = DYNAMO_DB_MENU_TABLE_NAME
+        private const val USER_ID_INDEX = MENU_TABLE_USER_ID_MENU_ID_INDEX
     }
 
     suspend fun putMenuMainData(
