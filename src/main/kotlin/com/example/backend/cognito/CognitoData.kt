@@ -3,19 +3,25 @@ package com.example.backend.cognito
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserTokenData(
+class UserTokenData(
     val accessToken: String?,
     val refreshToken: String?,
     val idToken: String?,
 )
 
 @Serializable
-data class MyToken(
+class MyToken(
     val token: String
 )
 
 @Serializable
-data class AuthUserData(
+class AuthUserData(
     val email: String,
     val password: String,
+)
+
+@Serializable
+class VerifyEmailData(
+    val email: String,
+    val confirmationCode: String,
 )

@@ -30,9 +30,9 @@ fun Application.configureCognitoRoutes(
                 call.respond(HttpStatusCode.OK, userTokenData)
             }
 
-            get("/token/refresh/{refresh_token}") {
-                val refreshToken = call.parameters["refresh_token"]
-                if (refreshToken.isNullOrBlank()) {
+            post("/token/refresh") {
+                val refreshToken = call.receiveText()
+                if (refreshToken.isBlank()) {
                     call.respond(HttpStatusCode.BadRequest, "Refresh Token parameter is empty")
                 } else {
                     val userTokenData = cognitoUseCasesInterface.loginWithRefreshToken(refreshToken = refreshToken)
@@ -40,9 +40,9 @@ fun Application.configureCognitoRoutes(
                 }
             }
 
-            post("/confirmation/resend/{email}") {
-                val email = call.parameters["email"]
-                if (email.isNullOrBlank()) {
+            post("/confirmation/resend") {
+                val email = call.receiveText()
+                if (email.isBlank()) {
                     call.respond(HttpStatusCode.BadRequest, "Email parameter is empty")
                 } else {
                     cognitoUseCasesInterface.resendConfirmationCode(email = email)
@@ -50,15 +50,15 @@ fun Application.configureCognitoRoutes(
                 }
             }
 
-            post("/confirmation/verify/{email}/{code}") {
-                val email = call.parameters["email"]
-                val code = call.parameters["code"]
-                if (email.isNullOrBlank() || code.isNullOrBlank()) {
+            post("/confirmation/verify") {
+                val verifyEmailData = call.receive<VerifyEmailData>()
+                if (verifyEmailData.email.isBlank()
+                    || verifyEmailData.confirmationCode.isBlank()) {
                     call.respond(HttpStatusCode.BadRequest, "Email or Verification Code parameter is empty")
                 } else {
                     cognitoUseCasesInterface.verifyEmail(
-                        email = email,
-                        confirmationCode = code,
+                        email = verifyEmailData.email,
+                        confirmationCode = verifyEmailData.confirmationCode,
                     )
                     call.respond(HttpStatusCode.OK, "Email was verified")
                 }
